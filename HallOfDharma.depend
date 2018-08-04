@@ -1,0 +1,31 @@
+# depslib dependency file v1.0
+1533418981 source:d:\dev\hallofdharma\hallofdharma\main.cpp
+	<iostream>
+	"windows.h"
+	"king.h"
+	"Moderator.h"
+	"Player.h"
+
+1533404649 source:d:\dev\hallofdharma\hallofdharma\src\king.cpp
+	"King.h"
+
+1533427833 d:\dev\hallofdharma\hallofdharma\include\king.h
+	"Player.h"
+	"Moderator.h"
+
+1533427858 d:\dev\hallofdharma\hallofdharma\include\player.h
+	<list>
+	<string>
+	"King.h"
+
+1533427833 d:\dev\hallofdharma\hallofdharma\include\moderator.h
+	"Player.h"
+	"King.h"
+
+1533417549 source:d:\dev\hallofdharma\hallofdharma\src\moderator.cpp
+	"Moderator.h"
+
+1533418981 source:d:\dev\hallofdharma\hallofdharma\src\player.cpp
+	"Player.h"
+	"King.h"
+
