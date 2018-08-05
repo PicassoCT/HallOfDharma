@@ -1,15 +1,18 @@
 #ifndef KING_H
 #define KING_H
 
+#include<list>
+
 // Administrative Class - all Players are subject of the king
 // All Moderators are subject of the king
 // The King is able to ban Moderators.
 // There is only one King, as there is only one Server
-#include "Player.h"
-#include "Moderator.h"
+
+
 
 class Moderator;
 class Player;
+class Moderator;
 
 class King
 {
@@ -19,98 +22,33 @@ public:
     /** Default destructor */
     virtual ~King();
 
-    void banPlayerForTime(Player* playerToBan, int durationInSeconds)
-    {
-        playerToBan->removeDharma(playerToBan->getDharma);
-        playerToBan->bannedForSeconds = durationInSeconds;
-        Populus.remove(playerToBan);
-        Brigands.push_back(playerToBan);
-    };
 
-    bool requestPermanentBan(Player* accused, Moderator* judicator, Player* bondsman)
-    {
 
-        if (judicator->getJudgmentOnPlayer(accused) && !bondsman->bailForPlayer(accused))
-        {
-            //guilty
-            Inferno.push_back(accused);
-            Populus.remove(accused);
-            accused->permaBanned = true;
-        }
+    void banPlayerForTime(Player* playerToBan, int durationInSeconds);
 
-        return true;
-    };
+    bool requestPermanentBan(Player* accused, Moderator* judicator, Player* bondsman);
 
-    void setFree(Player* vogelfrei)
-    {
-        Populus.push_back(vogelfrei);
-    };
+    void audience( int milliSecondsPast);
 
-    void serviceRoutine( int milliSecondsPast)
-    {
-        surveyBrigands(milliSecondsPast/1000);
+    void surveyBrigands(float timePassedInSeconds);
 
-        bandBrigands();
+    void banBrigands();
 
-    };
+    void riseAKnight(Player* newNoble);
 
-    void surveyBrigands(int timePassedInSeconds)
-    {
-        for (Player* guilty :  Brigands)
-        {
-            guilty->bannedForSeconds -= timePassedInSeconds;
-            if (guilty->bannedForSeconds >= 0)
-            {
-                //redeemed player
-                Populus.push_back(guilty);
-                Brigands.remove(guilty);
-            }
-        }
-    }
+    void moderatorInsteadOfTheModerator( Moderator * toBeReplaced, Player * replacement, Player* toBeReplacedPlayer, Player* replacementModerator);
 
-    void banBrigands()
-    {
-        for (Player* subject :  Populus)
-        {
-            if (subject->getDharma() < 0)
-            {
-                banPlayerForTime(subject, abs(subject->getDharma()))
-            }
-        }
-    }
+    void registerPlayer(Player* player);
 
-    void moderatorInsteadOfTheModerator( Moderator * toBeReplaced, Player * replacement, Player* toBeReplacedPlayer, Moderator* replacementModerator)
-    {
-        Player* newPlayer = new Player(toBeReplaced->name,king);
-        *newPlayer = *toBeReplaced.getPlayer();
-        memccpy(toBeReplacedPlayer, newPlayer, sizeof(newPlayer));
-        Populus.push_back(newPlayer);
-        Aristocracy.remove(toBeReplaced);
-        delete (*toBeReplaced);
+    void removePlayer(Player* player);
 
-        Moderator* newModerator = new Moderator(replacement,king);
-        Aristocracy.push_back(newModerator);
-        Populus.remove(replacement);
-        delete(*replacement);
-
-    };
-
-    void registerPlayer(Player* player)
-    {
-        Populus.push_back(player);
-    };
-
-    void removePlayer(Player* player)
-    {
-        Populus.remove(player);
-    };
 protected:
 
 private:
-    List<Player*> Inferno;
-    List<Player*> Brigands;
-    List<Player*> Populus;
-    List<Moderator*> Aristocracy;
+    std::list<Player*> Inferno;
+    std::list<Player*> Brigands;
+    std::list<Player*> Populus;
+    std::list<Moderator*> Aristocracy;
 };
 
 #endif // KING_H

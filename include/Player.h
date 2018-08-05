@@ -1,10 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <stdlib.h>
 #include <list>
 #include <string>
-#include "King.h"
+
 class King;
+class Moderator;
 
 class Player
 {
@@ -15,22 +17,13 @@ public:
     /** Default destructor */
     virtual ~Player();
 
-    Player* getPlayer()
-    {
-        return this;
-    }
+    Player* getPlayer();
 
     /** Set m_dharma
      * \param val New value to set
      */
-    void addDharma(int val)
-    {
-        m_dharma += val;
-    }
-    void removeDharma(int val)
-    {
-        m_dharma -= val;
-    }
+    void addDharma(int val);
+    void subDharma(int val);
 
     /** get the dharma of all this players and his lehnsmannList
     */
@@ -38,59 +31,24 @@ public:
 
     /** get the dharma of this player standalone
      */
-    int getDharma()
-    {
-        return m_dharma;
-    }
+    int getDharma();
 
     /** Get Recruited by another Thane*/
-    void acceptThane(Player* Thane)
-    {
-        thane = Thane;
-    }
+    void swareToThane(Player* Thane);
 
-    /** Switch allegiance to another thane or no thane at all*/
-    void removeThane(Player* ReplacementThane)
-    {
-        thane = ReplacementThane;
-    }
+    void swareToThane(Moderator* Thane);
+
+    void informOfBetrayal(Player* formerLehnsmann, Player* newThane);
 
     /** A Player can recruit other Lehnsmann- if his kharma is lower*/
-    void recruitLehnsmann(Player * lehnsmann) {
-        Recruits.push_back(lehnsmann);
-        //king->registerPlayer(lehnsmann);
-
-    };
+    void recruitLehnsmann(Player * lehnsmann) ;
 
     /** A Player can discard any direct lower Lehnsmann and his Followers*/
-    void disownLehnsmann(Player * lehnsmann, Player *newThane);
+    void disownLehnsmann(Player * lehnsmann, Player* newThane);
 
-    bool bailForPlayer(Player* accused)
-    {
-        bool oneOfMine= false;
-            for (Player* trusted :  Recruits)
-            {
-                if (trusted == accused)
-                {
-                   oneOfMine = true; break;
-                 }
-            }
-
-        if (oneOfMine   && abs(accused->getDharma()) < getDharma())
-
-        {
-            removeDharma(accused->getDharma());
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-
+    bool bailForPlayer(Player* accused);
+    void behaveRational(); //DELME
     std::list<Player*> lehnsmannList; //! List of followers of this Players
-
     std::string name;
     bool permaBanned = false;
     int  bannedForSeconds = 0;

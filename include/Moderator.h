@@ -1,24 +1,20 @@
 #ifndef MODERATOR_H
 #define MODERATOR_H
 
-#include "Player.h"
-#include "King.h"
-//King of a Dharma Tree
+#include <Player.h>
 
-class King;
+
 class Player;
+class King;
 
-class Moderator : public Player
-{
+class Moderator : public Player {
 public:
     /** Default constructor */
+    Moderator();
     Moderator(Player* player, King* king);
 
     /** Default destructor */
-    virtual ~Moderator()
-    {
-        delete (this->getPlayer());
-    };
+    virtual ~Moderator();
 
     /** Ban Player - Moderators can only ban players with lower dharma -
      all Lehnsmann of a banned Player a ban is removing recursive  */
@@ -35,19 +31,13 @@ public:
     /** Check for Feudal Consistency */
     void checkForHierarchyConsistency(void);
 
+    void informLehnsmannOfReplacement(Moderator* newThane);
 
-    /**Exchange  Moderator role*/
-    void moderatorInsteadOfTheModerator(Moderator *oldOne, Player * newOne, King* KingToReportTo);
+    bool getJudgmentOnPlayer(Player* accused);
 
-    bool getJudgmentOnPlayer(Player* accused)
-    {
-        return accused->getTotalDharma() < this->getTotalDharma();
-    } //TODO Get better judgment function
+
 protected:
-    Player* getModeratorPlayer()
-    {
-        return this->getPlayer();
-    };
+
     King*   king;
 private:
 };

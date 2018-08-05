@@ -1,3 +1,6 @@
+
+#include "Player.h"
+#include "King.h"
 #include "Moderator.h"
 
 Moderator::Moderator(Player* riseAKnigth, King* king)
@@ -9,10 +12,14 @@ Moderator::Moderator(Player* riseAKnigth, King* king)
     //ctor
 }
 
+
+/** Default destructor */
 Moderator::~Moderator()
 {
-    //dtor
-}
+     delete(this->getPlayer());
+};
+
+
 
 bool Moderator::banLehnsmann(Player* playerToBan, int durationInMinutes)
 {
@@ -37,7 +44,7 @@ void Moderator::checkForHierarchyConsistency(void)
 {
     if (lehnsmannList.empty())
     {
-        king->setFree(this);
+        king->registerPlayer(this);
         return;
     }
 
@@ -45,12 +52,24 @@ void Moderator::checkForHierarchyConsistency(void)
     {
         if (this->getDharma() < lehnsmann->getDharma())
         {
-            king->moderatorInsteadOfTheModerator(this,lehnsmann);
+            king->moderatorInsteadOfTheModerator(this,lehnsmann, this->getPlayer(), lehnsmann);
         }
     }
 
 };
 
-void Moderator::moderatorInsteadOfTheModerator(Moderator *oldOne, Player * newOne, King* KingToReportTo)
+void Moderator::informLehnsmannOfReplacement(Moderator* newThane)
 {
+    for (Player* lehnsmann :  lehnsmannList)
+    {
+        lehnsmann->swareToThane(newThane);
+    }
 }
+
+
+bool Moderator::getJudgmentOnPlayer(Player* accused)
+{
+    return accused->getTotalDharma() < this->getTotalDharma();
+} //TODO Get better judgement
+
+
