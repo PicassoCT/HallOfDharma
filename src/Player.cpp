@@ -51,8 +51,6 @@ void Player::subDharma(int val)
     m_dharma -= val;
 }
 
-
-
 /** get the dharma of this player standalone
  */
 int Player::getDharma()
@@ -72,19 +70,8 @@ void  Player::swareToThane(Player* thane)
     {
         thane->recruitLehnsmann(this);
         this->thane = thane;
-
     }
-
-
-
-
 };
-
-void  Player::swareToThane(Moderator* thane)
-{
-    swareToThane(thane->getPlayer());
-};
-
 
 
 /** A Player can recruit other free Lehnsmann- if his kharma is lower*/
@@ -159,6 +146,5 @@ bool  Player::bailForPlayer(Player* accused)
     {
         return false;
     }
-
 }
 
