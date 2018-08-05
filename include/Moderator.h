@@ -7,7 +7,7 @@
 class Player;
 class King;
 
-class Moderator : public Player {
+class Moderator :  {
 public:
     /** Default constructor */
     Moderator();
@@ -37,7 +37,7 @@ public:
 
 
 protected:
-
+    Player* player;
     King*   king;
 private:
 };
