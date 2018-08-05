@@ -14,10 +14,6 @@ King::~King()
     //dtor
 }
 
-
-
-
-
 void King::banPlayerForTime(Player* playerToBan, int durationInSeconds)
 {
     std::cout<<"Audience: Ban "<<playerToBan->name << " for "<< (durationInSeconds * abs(playerToBan->getDharma()))<< " Second(s)" <<std::endl;
@@ -29,7 +25,6 @@ void King::banPlayerForTime(Player* playerToBan, int durationInSeconds)
 
 bool King::requestPermanentBan(Player* accused, Moderator* judicator, Player* bondsman)
 {
-
     if (judicator->getJudgmentOnPlayer(accused) && !bondsman->bailForPlayer(accused))
     {
         //guilty
@@ -87,30 +82,21 @@ void King::riseAKnight(Player* newNoble)
     Moderator* newModerator = new Moderator(newNoble,this);
     Aristocracy.push_back(newModerator);
     Populus.remove(newNoble);
-    delete(newNoble);
-
-
-
 }
 
-void King::moderatorInsteadOfTheModerator( Moderator * toBeReplaced, Player * replacement, Player* toBeReplacedPlayer, Player* replacementModerator)
+void King::lowerToComoner(Moderator* nowComoner)
 {
-    Player* newPlayer = new Player(toBeReplaced->name, this);
-    *newPlayer = *toBeReplaced->getPlayer();
-    Populus.push_back(newPlayer);
-    Aristocracy.remove(toBeReplaced);
+    Populus.push_back(nowComoner->player);
+    Aristocracy.remove(nowComoner);
+    delete(nowComoner);
+}
 
-
-    Moderator* newModerator = new Moderator(replacement,this);
-    Aristocracy.push_back(newModerator);
-    Populus.remove(replacement);
-
-    toBeReplaced->swareToThane(newModerator);
-    newPlayer ->swareToThane(newModerator);
-
-    delete (toBeReplaced);
-    delete(replacement);
-
+void King::moderatorInsteadOfTheModerator( Moderator * toBeReplaced, Player * replacement)
+{
+    Player* demoted = toBeReplaced->player;
+    Populus.push_back(demoted);
+    toBeReplaced->player = replacement;
+    demoted->swareToThane(toBeReplaced);
 };
 
 void King::registerPlayer(Player* player)
