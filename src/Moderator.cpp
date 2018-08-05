@@ -5,9 +5,7 @@
 
 Moderator::Moderator(Player* riseAKnigth, King* king)
 {
-    Player* innerClass;
-    innerClass = this->getPlayer();
-    *innerClass = *riseAKnigth;
+    this->player = riseAKnigth;
     this->king = king;
     //ctor
 }
@@ -16,19 +14,18 @@ Moderator::Moderator(Player* riseAKnigth, King* king)
 /** Default destructor */
 Moderator::~Moderator()
 {
-     delete(this->getPlayer());
 };
 
 
 
 bool Moderator::banLehnsmann(Player* playerToBan, int durationInMinutes)
 {
-    for (Player* lehnsmann :  lehnsmannList)
+    for (Player* lehnsmann :  player->lehnsmannList)
     {
         if ( lehnsmann == playerToBan)
         {
             king->banPlayerForTime(playerToBan, durationInMinutes);
-            lehnsmannList.remove(playerToBan);
+            player->lehnsmannList.remove(playerToBan);
         }
     }
     return true;
@@ -42,13 +39,13 @@ bool Moderator::requestPermaBan(Player* accused, Moderator* judicator, Player* b
 /** Check for Feudal Consistency */
 void Moderator::checkForHierarchyConsistency(void)
 {
-    if (lehnsmannList.empty())
+    if (player->lehnsmannList.empty())
     {
-        king->registerPlayer(this);
+        king->lowerToComoner(this);
         return;
     }
 
-    for (Player* lehnsmann :  lehnsmannList)
+    for (Player* lehnsmann :  player->lehnsmannList)
     {
         if (this->getDharma() < lehnsmann->getDharma())
         {
@@ -58,13 +55,7 @@ void Moderator::checkForHierarchyConsistency(void)
 
 };
 
-void Moderator::informLehnsmannOfReplacement(Moderator* newThane)
-{
-    for (Player* lehnsmann :  lehnsmannList)
-    {
-        lehnsmann->swareToThane(newThane);
-    }
-}
+
 
 
 bool Moderator::getJudgmentOnPlayer(Player* accused)
