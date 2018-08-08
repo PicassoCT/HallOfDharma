@@ -52,12 +52,14 @@ public:
     std::string name;
     bool permaBanned = false;
     int  bannedForSeconds = 0;
+    int strikes = 0;
+    Player* thane; //! Mentor and Leader of this player
+
 protected:
 
 private:
     std::list <Player*> Recruits;
     King* king;    //! Server and Central Hub of the system
-    Player* thane; //! Mentor and Leader of this player
     int m_dharma; //! Kharma of this player
     float m_exp; //! Experience of this player
 };

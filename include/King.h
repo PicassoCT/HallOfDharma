@@ -1,6 +1,7 @@
 #ifndef KING_H
 #define KING_H
 
+#include <fstream>
 #include<list>
 
 // Administrative Class - all Players are subject of the king
@@ -30,25 +31,28 @@ public:
 
     void audience( int milliSecondsPast);
 
+
+    void lowerToComoner(Moderator* nowComoner);
+
     void surveyBrigands(float timePassedInSeconds);
 
     void banBrigands();
 
     void riseAKnight(Player* newNoble);
 
-    void moderatorInsteadOfTheModerator( Moderator * toBeReplaced, Player * replacement, Player* toBeReplacedPlayer, Player* replacementModerator);
+    void moderatorInsteadOfTheModerator( Moderator * toBeReplaced, Player * replacement);
 
     void registerPlayer(Player* player);
 
     void removePlayer(Player* player);
-
+    std::list<Moderator*> Aristocracy;
 protected:
 
 private:
     std::list<Player*> Inferno;
     std::list<Player*> Brigands;
     std::list<Player*> Populus;
-    std::list<Moderator*> Aristocracy;
+
 };
 
 #endif // KING_H

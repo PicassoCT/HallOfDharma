@@ -7,7 +7,7 @@
 class Player;
 class King;
 
-class Moderator :  {
+class Moderator   {
 public:
     /** Default constructor */
     Moderator();
@@ -35,9 +35,9 @@ public:
 
     bool getJudgmentOnPlayer(Player* accused);
 
-
-protected:
     Player* player;
+protected:
+
     King*   king;
 private:
 };

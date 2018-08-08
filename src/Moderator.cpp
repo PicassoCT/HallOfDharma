@@ -47,9 +47,9 @@ void Moderator::checkForHierarchyConsistency(void)
 
     for (Player* lehnsmann :  player->lehnsmannList)
     {
-        if (this->getDharma() < lehnsmann->getDharma())
+        if (this->player->getDharma() < lehnsmann->getDharma())
         {
-            king->moderatorInsteadOfTheModerator(this,lehnsmann, this->getPlayer(), lehnsmann);
+            king->moderatorInsteadOfTheModerator(this,lehnsmann);
         }
     }
 
@@ -60,7 +60,7 @@ void Moderator::checkForHierarchyConsistency(void)
 
 bool Moderator::getJudgmentOnPlayer(Player* accused)
 {
-    return accused->getTotalDharma() < this->getTotalDharma();
+    return accused->getTotalDharma() < this->player->getTotalDharma();
 } //TODO Get better judgement
 
 

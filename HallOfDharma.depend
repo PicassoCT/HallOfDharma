@@ -1,35 +1,37 @@
 # depslib dependency file v1.0
-1533463782 source:d:\dev\hallofdharma\hallofdharma\main.cpp
+1533761172 source:d:\dev\hallofdharma\hallofdharma\main.cpp
 	<iostream>
 	"windows.h"
 	"king.h"
 	"Moderator.h"
 	"Player.h"
 	<time.h>
+	<sstream>
 
-1533464330 source:d:\dev\hallofdharma\hallofdharma\src\king.cpp
+1533762060 source:d:\dev\hallofdharma\hallofdharma\src\king.cpp
 	"Player.h"
 	"Moderator.h"
 	"King.h"
 	<iostream>
 
-1533461639 d:\dev\hallofdharma\hallofdharma\include\king.h
+1533761974 d:\dev\hallofdharma\hallofdharma\include\king.h
+	<fstream>
 	<list>
 
-1533461602 d:\dev\hallofdharma\hallofdharma\include\player.h
+1533762029 d:\dev\hallofdharma\hallofdharma\include\player.h
 	<stdlib.h>
 	<list>
 	<string>
 
-1533458314 d:\dev\hallofdharma\hallofdharma\include\moderator.h
+1533500706 d:\dev\hallofdharma\hallofdharma\include\moderator.h
 	<Player.h>
 
-1533459652 source:d:\dev\hallofdharma\hallofdharma\src\moderator.cpp
+1533500798 source:d:\dev\hallofdharma\hallofdharma\src\moderator.cpp
 	"Player.h"
 	"King.h"
 	"Moderator.h"
 
-1533464199 source:d:\dev\hallofdharma\hallofdharma\src\player.cpp
+1533761945 source:d:\dev\hallofdharma\hallofdharma\src\player.cpp
 	"Player.h"
 	"Moderator.h"
 	"King.h"

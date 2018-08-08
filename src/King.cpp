@@ -6,6 +6,10 @@
 
 King::King()
 {
+    std::list<Player*> Inferno = *new std::list<Player*>();
+    std::list<Player*> Brigands= *new std::list<Player*>();
+    std::list<Player*> Populus= *new std::list<Player*>();
+    std::list<Moderator*> Aristocracy= *new std::list<Moderator*>();
     //ctor
 }
 
@@ -16,17 +20,23 @@ King::~King()
 
 void King::banPlayerForTime(Player* playerToBan, int durationInSeconds)
 {
-    std::cout<<"Audience: Ban "<<playerToBan->name << " for "<< (durationInSeconds * abs(playerToBan->getDharma()))<< " Second(s)" <<std::endl;
-    playerToBan->bannedForSeconds = durationInSeconds * abs(playerToBan->getDharma());
+    playerToBan->bannedForSeconds = durationInSeconds * abs(playerToBan->getTotalDharma());
     playerToBan->addDharma(abs(playerToBan->getDharma()));
     Populus.remove(playerToBan);
     Brigands.push_back(playerToBan);
+    //  std::cout<<"King: Ban "<<playerToBan->name << " for "<< (durationInSeconds * abs(playerToBan->getDharma()))<< " Second(s)" <<std::endl;
+
 };
 
 bool King::requestPermanentBan(Player* accused, Moderator* judicator, Player* bondsman)
 {
-    if (judicator->getJudgmentOnPlayer(accused) && !bondsman->bailForPlayer(accused))
+
+    if ((judicator == nullptr || judicator->getJudgmentOnPlayer(accused))
+            && (bondsman == nullptr || !bondsman->bailForPlayer(accused)))
     {
+
+        //std::cout("King: PermaBan "<<accused->name << " for life with reward x in Dharma for finders among the new population.");
+
         //guilty
         Inferno.push_back(accused);
         Populus.remove(accused);
@@ -39,8 +49,11 @@ bool King::requestPermanentBan(Player* accused, Moderator* judicator, Player* bo
 
 void King::audience( int milliSecondsPast)
 {
+    Populus.unique();
+    Aristocracy.unique();
 
-    for (Moderator* aristocrat: Aristocracy) {
+    for (Moderator* aristocrat: Aristocracy)
+    {
         aristocrat->checkForHierarchyConsistency();
     }
 
@@ -50,31 +63,60 @@ void King::audience( int milliSecondsPast)
 
 };
 
+
+
 void King::surveyBrigands(float timePassedInSeconds)
 {
+    std::list<Player*> brigandsToPardon;
     for (Player* guilty :  Brigands)
     {
         guilty->bannedForSeconds =   guilty->bannedForSeconds  +  (int) (timePassedInSeconds + 0.5);
         if (guilty->bannedForSeconds >= 0)
         {
-               std::cout<<" Royal Audience:" << guilty->name <<" reinstated!"<<std::endl;
+            brigandsToPardon.push_back(guilty);
+            //  std::cout<<" King: Brigand " << guilty->name <<" pardoned"<<std::endl;
             //redeemed player
-            Populus.push_back(guilty);
-            Brigands.remove(guilty);
+
         }
+    }
+    for (Player* subject :  brigandsToPardon)
+    {
+        Populus.push_back(subject);
+        Brigands.remove(subject);
     }
 }
 
 void King::banBrigands()
 {
+    if (Populus.empty())return;
+
+
+    bool bannedABrigand=false;
+    std::list<Player*> brigandsToBan;
+
     for (Player* subject :  Populus)
     {
-        if (subject->getDharma() < 0)
+        if (subject->getDharma() < 0 && subject->bannedForSeconds <= 0 )
         {
-            banPlayerForTime(subject, abs(subject->getDharma()));
-
+            brigandsToBan.push_back(subject);
         }
     }
+
+    if (brigandsToBan.empty()) return;
+
+    for (Player* subject :  brigandsToBan)
+    {
+        subject->strikes++;
+        if( subject->strikes > 3)
+        {
+            requestPermanentBan(subject, Aristocracy.front(), subject->thane );
+        }
+        else
+        {
+            banPlayerForTime(subject, abs(subject->getDharma()));
+        }
+    }
+
 }
 
 void King::riseAKnight(Player* newNoble)
@@ -93,15 +135,18 @@ void King::lowerToComoner(Moderator* nowComoner)
 
 void King::moderatorInsteadOfTheModerator( Moderator * toBeReplaced, Player * replacement)
 {
-    Player* demoted = toBeReplaced->player;
-    Populus.push_back(demoted);
-    toBeReplaced->player = replacement;
-    demoted->swareToThane(toBeReplaced);
+
+    for (Player* subject :  toBeReplaced->player->lehnsmannList)
+    {
+        replacement->lehnsmannList.push_back(subject);
+    }
+    toBeReplaced->player->lehnsmannList.clear();
+    lowerToComoner(toBeReplaced);
+    riseAKnight(replacement);
 };
 
 void King::registerPlayer(Player* player)
 {
-    bool allreadyRegistered = false;
     for (Player* subject :  Populus)
     {
         if (subject == player)
